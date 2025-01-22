@@ -6,6 +6,43 @@ body {
     height: 100%
 }
 
-#gameCanvas {
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
+#popup {
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+    color: #fff;
+}
+
+#popup h1 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#popup button {
+    width: 100%;
+    background-color: transparent;
+    color: #fff;
+    border-color: #fff;
+    padding: 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#popup button:hover {
+    background-color: #fff;
+    color: #000;
 }
