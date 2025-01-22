@@ -1,0 +1,10 @@
+{
+  "name": "space-explorer-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js/engine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true
+}
