@@ -72,6 +72,10 @@ planetCanvas.addEventListener('mousemove', (event) => {
     drawPlanets();
 
     allPlanets.forEach((planet) => {
+        let planetInfo = fetchPlanet(planet.planetId);
+
+        console.log(planetInfo);
+
         let distance = Math.sqrt(Math.pow(planet.x - x, 2) + Math.pow(planet.y - y, 2));
         if (distance < planet.radius) {
             planetContext.fillStyle = 'black';

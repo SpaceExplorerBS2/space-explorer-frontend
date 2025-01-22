@@ -1,0 +1,9 @@
+{
+    "planetId" : "planet123" ,
+    "name" : "Zorax" ,
+    "resources " : {
+    "iron" : 50 ,
+    "gold" : 20
+    } ,
+    " hazards " : [ " asteroid_field " ]
+}
