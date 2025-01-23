@@ -138,6 +138,7 @@ function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = nu
     }
 }
 
+
 // Initialize
 drawPlanets();
 animateDots();
