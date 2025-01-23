@@ -1,0 +1,10 @@
+{
+  " playerId " : " 12345 " ,
+  " name " : " CaptainX " ,
+  " inventory " : {
+    " fuel " : 100 ,
+    " iron " : 0 ,
+    " gold " : 0
+  } ,
+  " currentPlanetId " : " planet123 "
+}

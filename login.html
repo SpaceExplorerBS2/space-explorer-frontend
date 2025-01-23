@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script type="application/javascript">
+        window.onload = function () {
+            const form = document.getElementById("form");
+            form.addEventListener("submit", handleLogin);
+        }
+        async function handleLogin(event) {
+            const form = document.getElementById("form");
+            const data = new FormData(form);
+            //set username in local storage
+            localStorage.setItem('user', data.get('user'));
+            //const user = await fetch('http://localhost:8001', {method: 'POST', body: JSON.stringify(data)})
+            //    .then(response => response.json());
+            event.preventDefault();
+        }
+    </script>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="form">
+        <label for="user">Username:</label>
+        <input type="text" id="user" name="user">
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

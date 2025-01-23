@@ -1,0 +1,22 @@
+{
+  " player " : {
+    " playerId " : " 12345 " ,
+    " name " : " CaptainX " ,
+    " inventory " : {
+      " fuel " : 90 ,
+      " iron " : 0 ,
+      " gold " : 0
+    } ,
+    " currentPlanetId " : " planet456 "
+  } ,
+  " planet " : {
+    " planetId " : " planet456 " ,
+    " name " : " Xenon " ,
+    " resources " : {
+      " silver " : 40 ,
+      " platinum " : 10
+    } ,
+    " hazards " : [ " alien_attack " ]
+  } ,
+  " message " : " Du bist zu einem neuen Planeten gereist :\nXenon . Treibstoffverbrauch : 10 Einheiten . "
+}
