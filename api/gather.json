@@ -1,0 +1,24 @@
+{
+  " player " : {
+    " playerId " : " 12345 " ,
+    " name " : " CaptainX " ,
+    " inventory " : {
+      " fuel " : 90 ,
+      " iron " : 0 ,
+      " gold " : 0 ,
+      " silver " : 20 ,
+      " platinum " : 5
+    } ,
+    " currentPlanetId " : " planet456 "
+  } ,
+  " planet " : {
+    " planetId " : " planet456 " ,
+    " name " : " Xenon " ,
+    " resources " : {
+      " silver " : 20 ,
+      " platinum " : 5
+    } ,
+    " hazards " : [ " alien_attack " ]
+  } ,
+  " message " : " Du hast 20 Silber und 5 Platin gesammelt.\nEs bleiben noch 20 Silber und 5 Platin auf Xenon. "
+}
