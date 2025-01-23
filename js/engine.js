@@ -2,7 +2,7 @@ let bgCanvas = document.getElementById('backgroundCanvas');
 let planetCanvas = document.getElementById('planetCanvas');
 
 bgCanvas.width = planetCanvas.width = window.innerWidth;
-bgCanvas.height = planetCanvas.height = window.innerHeight;
+bgCanvas.height = planetCanvas.height = window.innerHeight - 64;
 
 // Contexts for the two canvases
 let bgContext = bgCanvas.getContext('2d');
