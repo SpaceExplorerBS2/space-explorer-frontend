@@ -11,12 +11,6 @@ canvas {
     top: 0;
     left: 0;
 }
-
-#gameOverlay {
-    position: absolute;
-    top: 64px;
-    left: 0;
-}
 #popup {
     position: absolute;
     top: 50%;
@@ -58,7 +52,8 @@ header {
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    position: relative;
+    position: absolute;
+    width: 100vw;
 }
 
 header::before {

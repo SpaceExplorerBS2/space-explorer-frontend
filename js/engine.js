@@ -153,11 +153,9 @@ function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = nu
     let ctx = gameOverlay.getContext('2d');
     ctx.clearRect(0, 64, gameOverlay.width, gameOverlay.height);
 
-    // Draw background for the overlay
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
     ctx.fillRect(0, 64, gameOverlay.width, gameOverlay.height);
 
-    // Draw resource information
     ctx.fillStyle = 'white';
     ctx.font = '18px Arial';
     ctx.fillText(`Gold: ${resources.gold}`, 20, 40);
