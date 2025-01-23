@@ -106,6 +106,10 @@ planetCanvas.addEventListener('click', (event) => {
             document.getElementById('popupButtonMine').style.display = 'block';
             document.getElementById('popupButtonAttack').style.display = 'block';
         }
+        else {
+            let popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
     });
 });
 
