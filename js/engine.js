@@ -2,7 +2,7 @@ let bgCanvas = document.getElementById('backgroundCanvas');
 let planetCanvas = document.getElementById('planetCanvas');
 
 bgCanvas.width = planetCanvas.width = window.innerWidth;
-bgCanvas.height = planetCanvas.height = window.innerHeight;
+bgCanvas.height = planetCanvas.height = window.innerHeight - 72;
 
 // Contexts for the two canvases
 let bgContext = bgCanvas.getContext('2d');
@@ -115,11 +115,11 @@ function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = nu
     gameOverlay.height = 100; // Fixed height for the overlay
 
     let ctx = gameOverlay.getContext('2d');
-    ctx.clearRect(0, 0, gameOverlay.width, gameOverlay.height);
+    ctx.clearRect(0, 64, gameOverlay.width, gameOverlay.height);
 
     // Draw background for the overlay
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.fillRect(0, 0, gameOverlay.width, gameOverlay.height);
+    ctx.fillRect(0, 64, gameOverlay.width, gameOverlay.height);
 
     // Draw resource information
     ctx.fillStyle = 'white';
