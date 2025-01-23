@@ -23,21 +23,8 @@ const fetchPlanet = (id, name = null) => {
 
     return planetInfo;
 }
-const fetchAllPlanets = () => {
-    const planets = [{
-        "planetId": "1",
-        "x": 500,
-        "y": 500,
-        "radius":30,
-        "name": "Zorax",
-        "resources ": {
-            "iron": 50,
-            "gold": 20
-        },
-        " hazards ": [" asteroid_field "]
-    }];
-
-    return planets;
+const fetchAllPlanets = async () => {
+    return await fetch(API_URL + "planets").then(response => response.json());
 }
 
 const execMove = (playerId, newPlanetId) => {

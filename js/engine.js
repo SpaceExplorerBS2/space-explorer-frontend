@@ -1,179 +1,171 @@
-let bgCanvas = document.getElementById('backgroundCanvas');
-let planetCanvas = document.getElementById('planetCanvas');
-let spaceshipCanvas = document.getElementById('spaceShipCanvas');
+// Canvas references
+const bgCanvas = document.getElementById('backgroundCanvas');
+const planetCanvas = document.getElementById('planetCanvas');
+const spaceshipCanvas = document.getElementById('spaceShipCanvas');
 
+
+const bgContext = bgCanvas.getContext('2d');
+const planetContext = planetCanvas.getContext('2d');
+const spaceshipContext = spaceshipCanvas.getContext('2d');
+
+// Set canvas dimensions
 bgCanvas.width = planetCanvas.width = spaceshipCanvas.width = window.innerWidth;
 bgCanvas.height = planetCanvas.height = spaceshipCanvas.height = window.innerHeight;
 
-// Contexts for the two canvases
-let bgContext = bgCanvas.getContext('2d');
-let planetContext = planetCanvas.getContext('2d');
-let spaceshipContext = spaceshipCanvas.getContext('2d');
+// Spaceship object
+let spaceship = {
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+    width: 40,
+    height: 40,
+    dx: 0,
+    dy: 0,
+    speed: 2,
+};
 
-let rotationAngle = 0;
-let currentPlanet = fetchPlanet("");
-
-// Initialize white dots for animation
-let dots = [];
-for (let i = 0; i < 100; i++) {
-    dots.push({
-        x: Math.random() * bgCanvas.width,
-        y: Math.random() * bgCanvas.height,
-        dx: Math.random() * 2 - 1,
-        dy: Math.random() * 2 - 1,
+// Asteroids for collision detection
+let asteroids = [];
+for (let i = 0; i < 20; i++) {
+    asteroids.push({
+        x: Math.random() * 5000 - 2500,
+        y: Math.random() * 5000 - 2500,
+        radius: Math.random() * 20 + 10,
     });
 }
 
-const getCurrentPlayerPosition = (playerId) => {
-    const player = getPlayer(playerId);
-    const currentPlanet = fetchPlanet(player.currentPlanetId);
-
-    return {
-        x: currentPlanet.x,
-        y: currentPlanet.y,
-        radius: currentPlanet.radius
-    };
-}
-
-
-
-
-// Generate planets
-const getAllPlanets = (canvas) => {
-    let planets = [];
-    let fetchedPlanets = fetchAllPlanets();
-
-    for (let i = 0; i < fetchedPlanets.length; i++) {
-        let planet = fetchedPlanets[i];
-        planets.push({
-            id: planet.planetId,
-            name: planet.name,
-            x: planet.x ?? Math.random() * (canvas.width - 150),
-            y: planet.y ?? Math.random() * (canvas.height - 150),
-            radius: planet.radius ?? Math.random() * 15 + 5,
-            color: '#' + Math.floor(Math.random() * 16777215).toString(16),
-        });
-    }
-    return planets;
-};
-const allPlanets = getAllPlanets(planetCanvas);
-
-
-const drawSpaceship = (x, y) => {
-    spaceshipContext.clearRect(0,0,spaceshipCanvas.width,spaceshipCanvas.height);
-
-    spaceshipContext.beginPath();
-    spaceshipContext.strokeStyle = 'red';
-    spaceshipContext.rect(x-40, y-40, 80, 80);
-    spaceshipContext.stroke();
+// Camera
+let camera = {
+    x: 0,
+    y: 0,
+    width: bgCanvas.width,
+    height: bgCanvas.height,
 };
 
-const drawSpaceshipAtCurrentPlanet = () => {
-    const currentPlanet = fetchPlanet("");
-    drawSpaceship(currentPlanet.x, currentPlanet.y);
-}
+let backgroundDots = Array.from({ length: 100 }, () => ({
+    x: Math.random() * bgCanvas.width,
+    y: Math.random() * bgCanvas.height,
+    radius: Math.random() * 2,
+    dx: (Math.random() - 0.5) * 0.5,
+    dy: (Math.random() - 0.5) * 0.5,
+}));
 
-// Draw planets on the static canvas
-const drawPlanets = () => {
-    allPlanets.forEach((planet) => {
-        planetContext.fillStyle = planet.color;
+const drawBackground = () => {
+    bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+    backgroundDots.forEach((dot) => {
+        bgContext.fillStyle = 'white';
+        bgContext.beginPath();
+        bgContext.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+        bgContext.fill();
+
+        // Update dot position
+        dot.x += dot.dx;
+        dot.y += dot.dy;
+
+        // Wrap dots around the canvas edges
+        if (dot.x < 0) dot.x = bgCanvas.width;
+        if (dot.x > bgCanvas.width) dot.x = 0;
+        if (dot.y < 0) dot.y = bgCanvas.height;
+        if (dot.y > bgCanvas.height) dot.y = 0;
+    });
+};
+
+// Draw planets
+const drawPlanets = async () => {
+
+    const planets = await fetchAllPlanets();
+
+    planets.forEach((planet) => {
+        planetContext.fillStyle = '#' + Math.floor(Math.random() * 16777215).toString(16);
         planetContext.beginPath();
-        planetContext.arc(planet.x, planet.y, planet.radius, 0, Math.PI * 2);
+        planetContext.arc(
+            planet.x - camera.x,
+            planet.y - camera.y,
+            planet.radius,
+            0,
+            Math.PI * 2
+        );
         planetContext.fill();
     });
 };
 
-// Animate the dots on the background canvas
-const animateDots = () => {
-    bgContext.fillStyle = 'black';
-    bgContext.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+const drawSpaceship = () => {
+    spaceshipContext.clearRect(0, 0, spaceshipCanvas.width, spaceshipCanvas.height);
 
-    bgContext.fillStyle = 'white';
-    dots.forEach((dot) => {
-        dot.x += dot.dx;
-        dot.y += dot.dy;
-
-        if (dot.x < 0 || dot.x > bgCanvas.width) dot.dx *= -1;
-        if (dot.y < 0 || dot.y > bgCanvas.height) dot.dy *= -1;
-
-        bgContext.fillRect(dot.x, dot.y, 2, 2);
-    });
-
-    requestAnimationFrame(animateDots);
+    spaceshipContext.fillStyle = 'green';
+    spaceshipContext.fillRect(
+        spaceship.x - spaceship.width / 2 - camera.x,
+        spaceship.y - spaceship.height / 2 - camera.y,
+        spaceship.width,
+        spaceship.height
+    );
 };
 
-// Handle hover and click events
-planetCanvas.addEventListener('mousemove', (event) => {
-    let x = event.clientX;
-    let y = event.clientY;
-
+const drawAsteroids = () => {
     planetContext.clearRect(0, 0, planetCanvas.width, planetCanvas.height);
+
+    asteroids.forEach((asteroid) => {
+        planetContext.fillStyle = 'brown';
+        planetContext.beginPath();
+        planetContext.arc(
+            asteroid.x - camera.x,
+            asteroid.y - camera.y,
+            asteroid.radius,
+            0,
+            Math.PI * 2
+        );
+        planetContext.fill();
+    });
+};
+
+const handleSpaceshipMovement = () => {
+    spaceship.x += spaceship.dx;
+    spaceship.y += spaceship.dy;
+
+    // Camera follows the spaceship
+    camera.x = spaceship.x - camera.width / 2;
+    camera.y = spaceship.y - camera.height / 2;
+
+};
+
+const checkCollision = () => {
+    asteroids.forEach((asteroid) => {
+        let dx = spaceship.x - asteroid.x;
+        let dy = spaceship.y - asteroid.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < asteroid.radius + spaceship.width / 2) {
+            console.log('Collision detected!');
+            // Handle collision (e.g., stop spaceship, decrease health, etc.)
+            spaceship.dx = 0;
+            spaceship.dy = 0;
+        }
+    });
+};
+
+const animate = () => {
+    handleSpaceshipMovement();
+    checkCollision();
+    drawBackground();
+    drawSpaceship();
+    drawAsteroids();
     drawPlanets();
+    requestAnimationFrame(animate);
+};
 
-    allPlanets.forEach((planet) => {
-        let distance = Math.sqrt(Math.pow(planet.x - x, 2) + Math.pow(planet.y - y, 2));
-        if (distance < planet.radius) {
-            planetContext.fillStyle = 'black';
-            planetContext.fillRect(planet.x + 20, planet.y - 60, 150, 70);
-
-            planetContext.fillStyle = 'white';
-            planetContext.fillText(`x: ${planet.x.toFixed(0)}`, planet.x + 25, planet.y - 40);
-            planetContext.fillText(`y: ${planet.y.toFixed(0)}`, planet.x + 25, planet.y - 25);
-            planetContext.fillText(`radius: ${planet.radius.toFixed(0)}`, planet.x + 25, planet.y - 10);
-        }
-    });
+// Keydown events for movement
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowUp') spaceship.dy = -spaceship.speed;
+    if (event.key === 'ArrowDown') spaceship.dy = spaceship.speed;
+    if (event.key === 'ArrowLeft') spaceship.dx = -spaceship.speed;
+    if (event.key === 'ArrowRight') spaceship.dx = spaceship.speed;
 });
 
-planetCanvas.addEventListener('click', (event) => {
-    let x = event.clientX;
-    let y = event.clientY;
-
-    allPlanets.forEach((planet) => {
-        let distance = Math.sqrt(Math.pow(planet.x - x, 2) + Math.pow(planet.y - y, 2));
-        if (distance < planet.radius) {
-            // display popup where player can choose between mining and attacking
-            let popup = document.getElementById('popup');
-            document.getElementById('currentPlanet').innerText = `${planet.name}`;
-            popup.style.display = 'block';
-            document.getElementById('popupButtonMine').style.display = 'block';
-            document.getElementById('popupButtonAttack').style.display = 'block';
-        }
-        else {
-            let popup = document.getElementById('popup');
-            popup.style.display = 'none';
-        }
-    });
+// Keyup events to stop movement
+document.addEventListener('keyup', (event) => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') spaceship.dy = 0;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') spaceship.dx = 0;
 });
 
-function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = null) {
-    let gameOverlay = document.getElementById('gameOverlay');
-    gameOverlay.width = window.innerWidth;
-    gameOverlay.height = 100; // Fixed height for the overlay
-
-    let ctx = gameOverlay.getContext('2d');
-    ctx.clearRect(0, 64, gameOverlay.width, gameOverlay.height);
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.fillRect(0, 64, gameOverlay.width, gameOverlay.height);
-
-    ctx.fillStyle = 'white';
-    ctx.font = '18px Arial';
-    ctx.fillText(`Gold: ${resources.gold}`, 20, 40);
-    ctx.fillText(`Crystals: ${resources.crystals}`, 20, 70);
-
-    // Display selected planet information
-    if (selectedPlanet) {
-        ctx.fillText(`Selected Planet:`, 200, 40);
-        ctx.fillText(`x: ${selectedPlanet.x.toFixed(0)}`, 200, 60);
-        ctx.fillText(`y: ${selectedPlanet.y.toFixed(0)}`, 200, 80);
-        ctx.fillText(`Radius: ${selectedPlanet.radius.toFixed(0)}`, 200, 100);
-    } else {
-        ctx.fillText(`No planet selected`, 200, 40);
-    }
-}
-
-
-drawSpaceshipAtCurrentPlanet();
-drawPlanets();
-animateDots();
-drawGameOverlay();
+// Initialize and start animation
+animate();
