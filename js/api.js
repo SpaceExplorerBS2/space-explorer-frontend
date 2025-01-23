@@ -1,3 +1,4 @@
+const API_URL = "https://api-space-explorer.programar.io/"
 const createPlayer = (name) => {
 
 }
