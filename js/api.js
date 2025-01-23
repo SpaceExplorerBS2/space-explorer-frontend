@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const createPlayer = (name) => {
 
 }
@@ -9,13 +7,35 @@ const fetchPlayer = (id, name = null) => {
 }
 
 const fetchPlanet = (id, name = null) => {
-    const filePath = 'api/planet.json';
-    const fileContent = fs.readFileSync(filePath);
-    const planetInfo = JSON.parse(fileContent);
+    const planetInfo = {
+        "planetId": "1",
+        "x": 500,
+        "y": 500,
+        "name": "Zorax",
+        "resources ": {
+            "iron": 50,
+            "gold": 20
+        },
+        " hazards ": [" asteroid_field "]
+    };
+
     return planetInfo;
 }
+const fetchAllPlanets = () => {
+    const planets = [{
+        "planetId": "1",
+        "x": 500,
+        "y": 500,
+        "name": "Zorax",
+        "resources ": {
+            "iron": 50,
+            "gold": 20
+        },
+        " hazards ": [" asteroid_field "]
+    }];
 
-c
+    return planets;
+}
 
 const execMove = (playerId, currentPlanetId, newPlanetId) => {
 

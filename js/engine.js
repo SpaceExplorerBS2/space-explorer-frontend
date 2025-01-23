@@ -22,10 +22,15 @@ for (let i = 0; i < 100; i++) {
 // Generate planets
 const getAllPlanets = (canvas) => {
     let planets = [];
-    for (let i = 0; i < 10; i++) {
+    let fetchedPlanets = fetchAllPlanets();
+
+    for (let i = 0; i < fetchedPlanets.length; i++) {
+        let planet = fetchedPlanets[i];
         planets.push({
-            x: Math.random() * (canvas.width - 150),
-            y: Math.random() * (canvas.height - 150),
+            id: planet.planetId,
+            name: planet.name,
+            x: planet.x ?? Math.random() * (canvas.width - 150),
+            y: planet.y ?? Math.random() * (canvas.height - 150),
             radius: Math.random() * 15 + 5,
             color: '#' + Math.floor(Math.random() * 16777215).toString(16),
         });
@@ -74,8 +79,6 @@ planetCanvas.addEventListener('mousemove', (event) => {
     allPlanets.forEach((planet) => {
         let planetInfo = fetchPlanet(planet.planetId);
 
-        console.log(planetInfo);
-
         let distance = Math.sqrt(Math.pow(planet.x - x, 2) + Math.pow(planet.y - y, 2));
         if (distance < planet.radius) {
             planetContext.fillStyle = 'black';
@@ -98,7 +101,7 @@ planetCanvas.addEventListener('click', (event) => {
         if (distance < planet.radius) {
             // display popup where player can choose between mining and attacking
             let popup = document.getElementById('popup');
-            document.getElementById('currentPlanet').innerText = `x: ${planet.x.toFixed(0)}, y: ${planet.y.toFixed(0)}`;
+            document.getElementById('currentPlanet').innerText = `${planet.name}`;
             popup.style.display = 'block';
             document.getElementById('popupButtonMine').style.display = 'block';
             document.getElementById('popupButtonAttack').style.display = 'block';
@@ -106,7 +109,7 @@ planetCanvas.addEventListener('click', (event) => {
     });
 });
 
-function drawGameOverlay(resources = { gold: 0, crystals: 0 }, selectedPlanet = null) {
+function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = null) {
     let gameOverlay = document.getElementById('gameOverlay');
     gameOverlay.width = window.innerWidth;
     gameOverlay.height = 100; // Fixed height for the overlay
