@@ -8,10 +8,15 @@ body {
 
 canvas {
     position: absolute;
-    top: 64px;
+    top: 0;
     left: 0;
 }
 
+#gameOverlay {
+    position: absolute;
+    top: 64px;
+    left: 0;
+}
 #popup {
     position: absolute;
     top: 50%;

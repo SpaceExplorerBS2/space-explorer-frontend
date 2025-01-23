@@ -1,12 +1,17 @@
 let bgCanvas = document.getElementById('backgroundCanvas');
 let planetCanvas = document.getElementById('planetCanvas');
+let spaceshipCanvas = document.getElementById('spaceShipCanvas');
 
-bgCanvas.width = planetCanvas.width = window.innerWidth;
-bgCanvas.height = planetCanvas.height = window.innerHeight - 64;
+bgCanvas.width = planetCanvas.width = spaceshipCanvas.width = window.innerWidth;
+bgCanvas.height = planetCanvas.height = spaceshipCanvas.height = window.innerHeight;
 
 // Contexts for the two canvases
 let bgContext = bgCanvas.getContext('2d');
 let planetContext = planetCanvas.getContext('2d');
+let spaceshipContext = spaceshipCanvas.getContext('2d');
+
+let rotationAngle = 0;
+let currentPlanet = fetchPlanet("");
 
 // Initialize white dots for animation
 let dots = [];
@@ -18,6 +23,20 @@ for (let i = 0; i < 100; i++) {
         dy: Math.random() * 2 - 1,
     });
 }
+
+const getCurrentPlayerPosition = (playerId) => {
+    const player = getPlayer(playerId);
+    const currentPlanet = fetchPlanet(player.currentPlanetId);
+
+    return {
+        x: currentPlanet.x,
+        y: currentPlanet.y,
+        radius: currentPlanet.radius
+    };
+}
+
+
+
 
 // Generate planets
 const getAllPlanets = (canvas) => {
@@ -31,13 +50,28 @@ const getAllPlanets = (canvas) => {
             name: planet.name,
             x: planet.x ?? Math.random() * (canvas.width - 150),
             y: planet.y ?? Math.random() * (canvas.height - 150),
-            radius: Math.random() * 15 + 5,
+            radius: planet.radius ?? Math.random() * 15 + 5,
             color: '#' + Math.floor(Math.random() * 16777215).toString(16),
         });
     }
     return planets;
 };
 const allPlanets = getAllPlanets(planetCanvas);
+
+
+const drawSpaceship = (x, y) => {
+    spaceshipContext.clearRect(0,0,spaceshipCanvas.width,spaceshipCanvas.height);
+
+    spaceshipContext.beginPath();
+    spaceshipContext.strokeStyle = 'red';
+    spaceshipContext.rect(x-40, y-40, 80, 80);
+    spaceshipContext.stroke();
+};
+
+const drawSpaceshipAtCurrentPlanet = () => {
+    const currentPlanet = fetchPlanet("");
+    drawSpaceship(currentPlanet.x, currentPlanet.y);
+}
 
 // Draw planets on the static canvas
 const drawPlanets = () => {
@@ -77,8 +111,6 @@ planetCanvas.addEventListener('mousemove', (event) => {
     drawPlanets();
 
     allPlanets.forEach((planet) => {
-        let planetInfo = fetchPlanet(planet.planetId);
-
         let distance = Math.sqrt(Math.pow(planet.x - x, 2) + Math.pow(planet.y - y, 2));
         if (distance < planet.radius) {
             planetContext.fillStyle = 'black';
@@ -106,6 +138,10 @@ planetCanvas.addEventListener('click', (event) => {
             document.getElementById('popupButtonMine').style.display = 'block';
             document.getElementById('popupButtonAttack').style.display = 'block';
         }
+        else {
+            let popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
     });
 });
 
@@ -115,11 +151,11 @@ function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = nu
     gameOverlay.height = 100; // Fixed height for the overlay
 
     let ctx = gameOverlay.getContext('2d');
-    ctx.clearRect(0, 0, gameOverlay.width, gameOverlay.height);
+    ctx.clearRect(0, 64, gameOverlay.width, gameOverlay.height);
 
     // Draw background for the overlay
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.fillRect(0, 0, gameOverlay.width, gameOverlay.height);
+    ctx.fillRect(0, 64, gameOverlay.width, gameOverlay.height);
 
     // Draw resource information
     ctx.fillStyle = 'white';
@@ -139,7 +175,7 @@ function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = nu
 }
 
 
-// Initialize
+drawSpaceshipAtCurrentPlanet();
 drawPlanets();
 animateDots();
 drawGameOverlay();
