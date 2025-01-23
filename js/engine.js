@@ -138,6 +138,10 @@ planetCanvas.addEventListener('click', (event) => {
             document.getElementById('popupButtonMine').style.display = 'block';
             document.getElementById('popupButtonAttack').style.display = 'block';
         }
+        else {
+            let popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
     });
 });
 
@@ -147,11 +151,11 @@ function drawGameOverlay(resources = {gold: 0, crystals: 0}, selectedPlanet = nu
     gameOverlay.height = 100; // Fixed height for the overlay
 
     let ctx = gameOverlay.getContext('2d');
-    ctx.clearRect(0, 0, gameOverlay.width, gameOverlay.height);
+    ctx.clearRect(0, 64, gameOverlay.width, gameOverlay.height);
 
     // Draw background for the overlay
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.fillRect(0, 0, gameOverlay.width, gameOverlay.height);
+    ctx.fillRect(0, 64, gameOverlay.width, gameOverlay.height);
 
     // Draw resource information
     ctx.fillStyle = 'white';
