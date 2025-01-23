@@ -11,6 +11,7 @@ const fetchPlanet = (id, name = null) => {
         "planetId": "1",
         "x": 500,
         "y": 500,
+        "radius":30,
         "name": "Zorax",
         "resources ": {
             "iron": 50,
@@ -26,6 +27,7 @@ const fetchAllPlanets = () => {
         "planetId": "1",
         "x": 500,
         "y": 500,
+        "radius":30,
         "name": "Zorax",
         "resources ": {
             "iron": 50,
@@ -37,8 +39,27 @@ const fetchAllPlanets = () => {
     return planets;
 }
 
-const execMove = (playerId, currentPlanetId, newPlanetId) => {
+const execMove = (playerId, newPlanetId) => {
+    const move = {
+        " playerId " : " 12345 " ,
+        " destinationPlanetId " : " planet456 "
+    }
+}
 
+const getPlayer = (id) => {
+    const player = {
+        "playerId" : " 12345 " ,
+        "name" : "CaptainX" ,
+        "inventory" : {
+        "fuel" : 100 ,
+            "iron" : 0 ,
+            "gold" : 0
+    } ,
+        "currentPlanetId" : "planet123"
+
+    }
+
+    return player;
 }
 
 const execGather = (playerId, planetId) => {
